@@ -1,0 +1,60 @@
+version: '3.7'
+services:
+  web:
+    image: nginx:alpine
+    container_name: webserver
+    hostname: webserver
+    ports:
+      - "8080:80"
+    restart: always
+    depends_on:
+      - php
+      - database
+      - redis
+    volumes:
+      - ./www:/application/public
+      - ./configs/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./logs/nginx:/var/log/nginx/
+    networks:
+      - infra      
+
+  database:
+    image: jacobalberty/firebird
+    container_name: firebird
+    hostname: firebird
+    ports:
+       - 3050:3050
+    restart: always
+    volumes:
+      - ./database:/database
+    networks:
+      - infra      
+  
+  redis:
+    image: redis:latest      
+    container_name: redisaws
+    hostname: redisaws
+    restart: always
+    networks:
+      - infra      
+  
+  php:
+    build:
+      context: .
+      dockerfile: ./Dockerfile-v1.2
+    container_name: php74aws
+    hostname: php74aws
+    ports:
+      - 9000
+    restart: always
+    volumes:
+      - ./www:/application
+      # - ./configs/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - infra  
+
+networks:
+  infra:
+    name: phpawsnetwork
+    driver: bridge
+

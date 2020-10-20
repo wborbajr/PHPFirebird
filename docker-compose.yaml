@@ -1,16 +1,16 @@
 version: '3.8'
 services:
-  web:
+  nginx:
     image: nginx:alpine
     container_name: webserver
     hostname: webserver
     ports:
-      - "8080:80"
+      - "8001:80"
     restart: always
     depends_on:
-      - php
-      - database
-      - redis
+      - php74fpm
+      - firebird
+      # - redis
     volumes:
       - ./www:/application/public
       - ./configs/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
@@ -18,7 +18,7 @@ services:
     networks:
       - infra      
 
-  database:
+  firebird:
     image: jacobalberty/firebird
     container_name: firebird
     hostname: firebird
@@ -30,20 +30,20 @@ services:
     networks:
       - infra      
   
-  redis:
-    image: redis:latest      
-    container_name: redisaws
-    hostname: redisaws
-    restart: always
-    networks:
-      - infra      
+  # redis:
+  #   image: redis:latest
+  #   container_name: redisaws
+  #   hostname: redisaws
+  #   restart: always
+  #   networks:
+  #     - infra
   
-  php:
+  php74fpm:
     build:
       context: .
-      dockerfile: ./Dockerfile-v1.2
-    container_name: php74aws
-    hostname: php74aws
+      dockerfile: ./Dockerfile
+    container_name: php74fpm
+    hostname: php74fpm
     ports:
       - 9000
     restart: always

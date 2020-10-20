@@ -1,20 +1,27 @@
 ### Container para Rodar PHP e Firebird
 
 #### Passo 1 - Construir a imagem 
-```
+
+```bash
 docker container prune -f
 
-docker-compose -f docker-compose-v1.yaml build --no-cache --pull
+docker-compose build --no-cache --pull
+
+ou 
+
+docker-compose up --build --force-recreate
 ```
 
 #### Execututando o container
-```
-docker-compose -f docker-compose-v1.yaml up
+
+```bash
+docker-compose up
 ```
 
 #### Parando o container
-```
-docker-compose -f docker-compose-v1.yaml down
+
+```bash
+docker-compose down
 ```
 
 #### Limpeza 
